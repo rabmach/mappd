@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "description": "Source URLs for each entry. Used by check-sources.sh to verify links are still live.",
+    "last_checked": "2026-08-22",
+    "how_to_update": "Add entries matching the name in places-data.js. Run ./check-sources.sh to verify."
+  },
+  "Flint": ["https://www.flintwaterstudy.org/", "https://www.epa.gov/flint"],
+  "Jackson": ["https://www.epa.gov/jxwater", "https://cooperationjackson.org/"],
+  "Newark": ["https://www.newarkwatersolutions.com/"],
+  "Cancer Alley": ["https://www.nrdc.org/stories/cancer-alley"],
+  "Houston": ["https://www.houstontx.gov/housing/"],
+  "New York City": ["https://a002-ceqraccess.nyc.gov/"],
+  "Pittsburgh": ["https://www.alleghenycountysports.com/"],
+  "Philadelphia": ["https://www.phila.gov/programs/pennsylvania-670102900/"],
+  "Baltimore": ["https://www.baltimorehousing.org/"],
+  "St. Louis": ["https://www.stlouis-mo.gov/"],
+  "Detroit": ["https://detroitmi.gov/"],
+  "New Orleans": ["https://www.nola.gov/water/"],
+  "Memphis": ["https://www.memphislightgaswater.org/"],
+  "Milwaukee": ["https://city.milwaukee.gov/water"],
+  "Tucson": ["https://www.tucsonaz.gov/water"],
+  "Phoenix": ["https://www.phoenix.gov/water"],
+  "Las Vegas": ["https://www.lvvwd.org/"],
+  "Los Angeles": ["https://dpw.lacity.gov/"],
+  "San Francisco": ["https://sfwater.org/"],
+  "Cleveland": ["https://www.clevelandwater.com/"],
+  "Providence": ["https://www.providenceri.com/water"],
+  "South Bend": ["https://www.southbendin.gov/water"]
+}
