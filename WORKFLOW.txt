@@ -1,0 +1,83 @@
+mappd — keeping it current
+==========================
+
+the site is flat HTML/JS/CSS. no build step, no framework, no dependencies to rot.
+every update is one commit. GitHub Pages auto-deploys on push. live in 30 seconds.
+
+
+ADDING A NEW ENTRY
+-------------------
+1. bash add-entry.sh          # prints a template with all fields
+2. fill it in
+3. paste into places-data.js inside the PLACES array
+4. git add . && git commit -m "add [place name]" && git push
+5. done. live in 30 seconds.
+
+
+CHECKING IF DATA IS STILL ACCURATE
+------------------------------------
+bash check-sources.sh
+
+hits every URL in sources.json, reports live/dead.
+when a link dies, you know which entry needs a fact refresh.
+
+
+WHAT TO ADD OVER TIME
+----------------------
+- new places people report (PRs from Reddit, your repo buddy)
+- updated stats when new data drops (Census, EPA, NCES)
+- new "what_changed" entries for the 103 entries that don't have one yet
+- missing states (ND, ME, MA, NH) in the map data
+- new tag categories if a whole new kind of problem emerges
+
+
+THE WORKFLOW
+-------------
+find something broken → research it → add the entry → push → live
+run check-sources.sh monthly → stale links → update → push → live
+new PIAAC data → update literacy.html + state.html → push → live
+someone on Reddit says "what about X?" → add it → push → live
+
+
+PUSHING TO GITHUB (first time)
+--------------------------------
+1. create repo on github.com (name: mappd)
+2. cd ~/mappd
+3. git remote add origin git@github.com:YOURUSERNAME/mappd.git
+4. git push -u origin main
+5. repo settings → Pages → Source: main branch, root folder → Save
+6. live at YOURUSERNAME.github.io/mappd
+
+
+GITHUB PAGES
+--------------
+auto-deploys on every push to main.
+no build, no CI, no config. just push and it's there.
+
+
+FILES
+------
+index.html        main map
+app.js             map logic, filters, search, civic action
+places-data.js     all entry data (TAG_COLORS, SEV, PLACES array)
+data.html          sortable/filterable table of all entries
+literacy.html      PIAAC literacy dashboard with interactive state grid
+state.html         per-state detail page (literacy + mappd entries)
+sources.json       source URLs for fact-checking
+check-sources.sh   verifies source URLs are still live
+add-entry.sh       template for adding new entries
+README.md          project readme
+
+
+DATA SOURCES
+-------------
+EPA, CDC, NCES, PIAAC, Census, GAO, UNC Sheps Center, local reporting
+
+
+THE THESIS
+-----------
+here's what's real about america — the bad and the good — and here's what
+people are doing about it. look before you move. then do something when
+you get there.
+
+"how you livin'?"
