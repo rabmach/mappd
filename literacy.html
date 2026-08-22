@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mappd — adult literacy in america</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--fg:#c8c8c8;--dim:#555;--red:#c0392b;--orange:#d35400;--yellow:#f39c12;--blue:#2980b9;--green:#27ae60;--surface:#141414;--border:#222}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:13px;line-height:1.6}
+header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header h1{font-size:15px;font-weight:600}
+header h1 span{color:#f48fb1}
+header a{color:var(--blue);text-decoration:none;font-size:12px}
+header a:hover{text-decoration:underline}
+.hero{padding:24px 16px;border-bottom:1px solid var(--border);max-width:1000px}
+.hero h2{font-size:18px;color:var(--fg);margin-bottom:8px}
+.hero .big-stat{font-size:48px;font-weight:700;color:#f48fb1;line-height:1}
+.hero .stat-desc{font-size:12px;color:var(--dim);margin-top:4px}
+.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px}
+.hero-card{background:var(--surface);border:1px solid var(--border);padding:12px;border-radius:3px}
+.hero-card .num{font-size:24px;font-weight:700;color:var(--fg)}
+.hero-card .label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.content{max-width:1200px;padding:16px}
+section{margin-bottom:24px}
+section h3{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.map-container{background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:3px;margin-bottom:16px;overflow-x:auto}
+.us-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;max-width:900px;margin:0 auto}
+.state-cell{padding:4px 2px;text-align:center;font-size:9px;border-radius:2px;cursor:pointer;position:relative;min-height:40px;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:transform .1s}
+.state-cell:hover{transform:scale(1.15);z-index:5}
+.state-cell .abbr{font-weight:700;font-size:10px}
+.state-cell .score{font-size:8px;opacity:.8}
+.state-cell .tooltip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#222;color:var(--fg);padding:6px 8px;border-radius:3px;font-size:10px;white-space:nowrap;z-index:10;border:1px solid var(--border);pointer-events:none}
+.state-cell:hover .tooltip{display:block}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;justify-content:center}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--dim)}
+.legend-swatch{width:14px;height:10px;border-radius:2px}
+table.ranked{width:100%;border-collapse:collapse}
+table.ranked th{background:var(--surface);border-bottom:2px solid var(--border);padding:6px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);cursor:pointer;user-select:none}
+table.ranked th:hover{color:var(--fg)}
+table.ranked th.sorted{color:var(--fg)}
+table.ranked td{padding:5px 10px;border-bottom:1px solid var(--border);font-size:11px}
+table.ranked tr:hover td{background:#1a1a1a}
+.bar-cell{width:200px}
+.bar{height:12px;border-radius:2px;position:relative}
+.bar-label{position:absolute;right:4px;top:0;font-size:9px;line-height:12px;color:var(--fg);font-weight:600}
+.nat-avg-line{position:absolute;left:calc((263.5-245)/35 * 100%);top:0;bottom:0;width:2px;background:var(--dim);z-index:2}
+.insight-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid #f48fb1;padding:12px;margin-bottom:12px;border-radius:0 3px 3px 0}
+.insight-box strong{color:var(--fg)}
+.insight-box p{font-size:12px;color:var(--dim);margin-top:4px}
+footer{padding:10px 16px;border-top:1px solid var(--border);font-size:10px;color:var(--dim);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+<h1><span>mappd</span> — adult literacy in america</h1>
+<a href="index.html">&larr; back to map</a>
+<a href="data.html">data table &rarr;</a>
+</header>
+
+<div class="hero">
+<h2>1 in 5 American adults can't read well enough to function in daily life</h2>
+<div class="hero-grid">
+<div class="hero-card"><div class="num">28%</div><div class="label">of US adults at low literacy (Level 1 or below)</div></div>
+<div class="hero-card"><div class="num">130M</div><div class="label">adults with limited literacy skills</div></div>
+<div class="hero-card"><div class="num" style="color:var(--red)">-13</div><div class="label">point score drop since 2017 (263.5 avg)</div></div>
+<div class="hero-card"><div class="num">2.5x</div><div class="label">gap between best (NH 278.9) and worst (NM/LA 252)</div></div>
+</div>
+<p style="font-size:11px;color:var(--dim);margin-top:12px">Source: PIAAC (Programme for the International Assessment of Adult Competencies), NCES Skills Map. National average: 263.5. Scale: 0-500. Below 255 = "low literacy desert."</p>
+</div>
+
+<div class="content">
+
+<section>
+<h3>State Literacy Scores — Interactive Grid</h3>
+<div class="map-container">
+<div class="us-grid" id="state-grid"></div>
+<div class="legend">
+<div class="legend-item"><div class="legend-swatch" style="background:#1b5e20"></div> 270+ High</div>
+<div class="legend-item"><div class="legend-swatch" style="background:#388e3c"></div> 265-269</div>
+<div class="legend-item"><div class="legend-swatch" style="background:#689f38"></div> 260-264 (avg)</div>
+<div class="legend-item"><div class="legend-swatch" style="background:#f57f17"></div> 255-259</div>
+<div class="legend-item"><div class="legend-swatch" style="background:#d32f2f"></div> Below 255 (desert)</div>
+</div>
+</div>
+</section>
+
+<section>
+<h3>All 50 States Ranked</h3>
+<table class="ranked" id="ranked-table">
+<thead><tr>
+<th data-col="rank">#</th>
+<th data-col="state">State</th>
+<th data-col="score">PIAAC Score</th>
+<th data-col="level1">% Low Literacy</th>
+<th data-col="bar">Score (visual)</th>
+</tr></thead>
+<tbody id="ranked-tbody"></tbody>
+</table>
+</section>
+
+<section>
+<h3>Key Insights</h3>
+<div class="insight-box">
+<strong>The Literacy-Poverty Trap</strong>
+<p>Low literacy and poverty are mutually reinforcing. States with PIAAC scores below 255 (NM, LA, MS, TX, NV) all have poverty rates above 14%. Adults who can't read well earn less, can't access health information, vote at lower rates, and are more likely to be incarcerated. Their children grow up in homes with fewer books, less school readiness, and worse educational outcomes — perpetuating the cycle.</p>
+</div>
+<div class="insight-box">
+<strong>The Great Divergence</strong>
+<p>The gap between high-literacy and low-literacy states is WIDENING. New Hampshire (278.9) vs. Louisiana (252) = 27-point gap. This translates to wildly different economic outcomes: NH median household income $88K vs. LA $53K. High-literacy states attract knowledge-economy jobs; low-literacy states can't. The literacy map is, increasingly, the economic destiny map.</p>
+</div>
+<div class="insight-box">
+<strong>The "Southern Surge" Paradox</strong>
+<p>Mississippi (252 PIAAC) has the worst adult literacy in the US — but its K-12 system just went from dead last to 28th in 4th-grade reading on NAEP. The Strong Readers Act (2013) is working at the K-12 level. But adult literacy hasn't budged in a decade. This reveals a critical truth: school reform takes a generation to reach the adult population. The adults who are 252 today were failed by a DIFFERENT school system 20-40 years ago.</p>
+</div>
+<div class="insight-box">
+<strong>The Hidden Crisis in "Good" States</strong>
+<p>California scores 257 — not the worst — but has 8.2 MILLION low-literacy adults (most in the US by raw number). New York (260) has 3.6M. Florida (259) has 3.5M. Large population states with "mediocre" scores produce enormous absolute numbers of functionally illiterate adults. A national average masks state-level concentration.</p>
+</div>
+<div class="insight-box">
+<strong>Policy Correlation</strong>
+<p>States that invested in evidence-based literacy reform (MS, TN, AL) are improving at the K-12 level. States that cut education funding (OK, WV, TX) are declining. The correlation between per-pupil spending and literacy outcomes isn't perfect — but it's consistent. You can't teach reading to 30 kids with one teacher who trained on an emergency certificate.</p>
+</div>
+</section>
+
+</div>
+
+<footer>Source: PIAAC Skills Map (nces.gov/surveys/piaac/scoresmap/), NCES, OECD. Scores are PIAAC Cycle 1 (2012/2014/2017 combined). Low literacy = Level 1 or below (can't perform basic reading tasks like comparing information, integrating info from multiple sources, or making low-level inferences).</footer>
+
+<script>
+// PIAAC data: [abbr, name, score, level1_pct, row, col]
+const STATES=[
+["NH","New Hampshire",278.9,11.5,0,10],["MN","Minnesota",278.8,12.0,1,7],["VT","Vermont",276.7,12.5,0,11],["DC","Washington DC",276.7,11.0,3,10],["AK","Alaska",276.7,13.0,0,0],["ND","North Dakota",276.0,12.8,1,5],["WA","Washington",275.0,14.0,1,1],["UT","Utah",274.0,14.5,2,3],["IA","Iowa",273.0,15.0,2,6],["OR","Oregon",273.0,15.5,1,1],["ME","Maine",273.0,13.5,0,11],["WI","Wisconsin",273.0,14.2,1,7],["MA","Massachusetts",273.0,13.8,0,11],["MT","Montana",273.0,14.0,1,3],["WY","Wyoming",272.0,14.5,1,4],["CO","Colorado",272.0,14.8,2,3],["NE","Nebraska",271.0,15.2,2,5],["CT","Connecticut",271.0,14.0,0,11],["KS","Kansas",271.0,15.5,2,5],["SD","South Dakota",271.0,15.0,1,5],["MI","Michigan",271.0,15.5,1,8],["HI","Hawaii",270.0,16.0,4,0],["VA","Virginia",270.0,15.8,2,9],["ID","Idaho",270.0,16.0,1,2],["OH","Ohio",268.0,17.0,2,8],["MD","Maryland",268.0,16.5,2,10],["IN","Indiana",266.0,18.0,2,7],["PA","Pennsylvania",266.0,17.5,1,10],["RI","Rhode Island",266.0,17.0,0,11],["MO","Missouri",266.0,18.5,2,6],["IL","Illinois",266.0,18.2,2,7],["NC","North Carolina",265.0,19.0,3,9],["NJ","New Jersey",264.0,18.5,1,10],["DE","Delaware",264.0,18.0,2,10],["OK","Oklahoma",263.0,19.5,3,5],["SC","South Carolina",263.0,20.0,3,9],["AZ","Arizona",262.0,20.5,3,2],["KY","Kentucky",261.0,21.0,3,8],["GA","Georgia",260.0,21.5,3,9],["TN","Tennessee",260.0,21.0,3,8],["WV","West Virginia",260.0,22.0,2,9],["NY","New York",260.0,19.5,1,10],["FL","Florida",259.0,20.5,4,10],["AL","Alabama",259.0,21.0,3,8],["AR","Arkansas",259.0,21.5,3,6],["CA","California",257.0,28.4,2,1],["NV","Nevada",255.0,22.0,2,2],["TX","Texas",254.0,28.2,3,4],["MS","Mississippi",252.0,28.0,3,7],["NM","New Mexico",252.0,29.1,3,3],["LA","Louisiana",252.0,27.1,3,6]
+];
+
+// Color by score
+function scoreColor(s){
+  if(s>=270)return'#1b5e20';
+  if(s>=265)return'#388e3c';
+  if(s>=260)return'#689f38';
+  if(s>=255)return'#f57f17';
+  return'#d32f2f';
+}
+
+// Build grid
+const grid=document.getElementById('state-grid');
+// Simple US grid layout (row-major, approximate geography)
+// Row 0: AK HI . . . . . . . . ME VT NH
+// Row 1: . . . . . MT ND MN WI . MA RI CT
+// Row 1: WA OR ID WY SD NE IA IL IN OH PA NY
+// Row 2: CA NV UT CO KS MO KY WV VA MD DE NJ
+// Row 3: . . AZ NM OK AR TN NC SC GA . . .
+// Row 4: . . . . TX LA MS AL . FL . . .
+// Simplified: just sort by score and display in a grid
+const sorted=[...STATES].sort((a,b)=>b[2]-a[2]);
+grid.style.gridTemplateColumns='repeat(10,1fr)';
+
+// Use a geographic-ish arrangement for the grid
+const GEO_GRID=[
+  // Row 0 (north)
+  [null,null,null,null,null,null,null,null,"AK","AK"],
+  ["WA","ID","MT","ND","MN","WI","MI",null,"AK","AK"],
+  // Row 1
+  ["OR","NV","WY","SD","IA","IL","IN","OH","PA","NY"],
+  // Row 2
+  ["CA","UT","CO","NE","MO","KY","WV","VA","MD","NJ"],
+  // Row 3
+  ["CA","AZ","NM","KS","AR","TN","NC","SC","DE","CT"],
+  // Row 4
+  [null,null,null,"OK","LA","MS","AL","GA","FL","RI"],
+  // Row 5
+  [null,null,"TX",null,null,null,null,null,"MA","NH"],
+  // Row 6
+  [null,null,null,null,null,null,null,null,"VT","ME"],
+  // extras
+  ["HI","DC"]
+];
+
+// Flatten and deduplicate
+const placed=new Set();
+const gridCells=[];
+GEO_GRID.flat().forEach(abbr=>{
+  if(!abbr||placed.has(abbr))return;
+  placed.add(abbr);
+  const st=STATES.find(s=>s[0]===abbr);
+  if(st)gridCells.push(st);
+});
+
+// Add any not yet placed
+STATES.forEach(st=>{
+  if(!placed.has(st[0]))gridCells.push(st);
+});
+
+gridCells.forEach(st=>{
+  const [abbr,name,score,lvl]=st;
+  const cell=document.createElement('div');
+  cell.className='state-cell';
+  cell.style.background=scoreColor(score);
+  cell.style.color=score>=265?'#fff':'#fff';
+  cell.innerHTML=`<div class="abbr">${abbr}</div><div class="score">${score}</div><div class="tooltip">${name}: ${score} (Low lit: ${lvl}%)</div>`;
+  cell.onclick=()=>window.location='state.html?st='+abbr;
+  grid.appendChild(cell);
+});
+
+// Build ranked table
+const rankedTbody=document.getElementById('ranked-tbody');
+const rankedSorted=[...STATES].sort((a,b)=>b[2]-a[2]);
+const maxScore=280;const minScore=245;const range=maxScore-minScore;
+
+let rSortCol='score';let rSortAsc=false;
+function renderRanked(){
+  let data=[...rankedSorted];
+  if(rSortCol==='score')data.sort((a,b)=>rSortAsc?a[2]-b[2]:b[2]-a[2]);
+  else if(rSortCol==='level1')data.sort((a,b)=>rSortAsc?a[3]-b[3]:b[3]-a[3]);
+  else if(rSortCol==='state')data.sort((a,b)=>rSortAsc?a[1].localeCompare(b[1]):b[1].localeCompare(a[1]));
+  else if(rSortCol==='rank')data.sort((a,b)=>rSortAsc?a[2]-b[2]:b[2]-a[2]);
+
+  rankedTbody.innerHTML=data.map(([abbr,name,score,lvl],i)=>{
+    const pct=Math.max(0,Math.min(100,((score-minScore)/range)*100));
+    const color=scoreColor(score);
+    const isLow=score<255;
+    return `<tr style="${isLow?'background:#1a0a0a':''}">
+      <td>${i+1}</td>
+      <td><strong>${name}</strong> <span style="color:var(--dim)">${abbr}</span>${isLow?' <span style="color:var(--red);font-size:9px">LOW DESERT</span>':''}</td>
+      <td style="color:${color};font-weight:700">${score}</td>
+      <td>${lvl}%</td>
+      <td class="bar-cell"><div class="bar" style="background:${color};width:${pct}%;position:relative"><div class="bar-label">${score}</div><div class="nat-avg-line" title="National avg: 263.5"></div></div></td>
+    </tr>`;
+  }).join('');
+}
+
+document.querySelectorAll('table.ranked th[data-col]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const col=th.dataset.col;
+    if(rSortCol===col)rSortAsc=!rSortAsc;else{rSortCol=col;rSortAsc=col==='state'}
+    document.querySelectorAll('table.ranked th').forEach(t=>{t.classList.remove('sorted')});
+    th.classList.add('sorted');
+    renderRanked();
+  });
+});
+
+renderRanked();
+</script>
+</body>
+</html>

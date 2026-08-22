@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mappd — what now and right now in america</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--fg:#e8e8e8;--dim:#888;--red:#c0392b;--orange:#d35400;--yellow:#f39c12;--blue:#2980b9;--green:#27ae60;--surface:#141414;--border:#2a2a2a}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:13px;line-height:1.5;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-shrink:0}
+header h1{font-size:15px;font-weight:600;color:var(--fg);white-space:nowrap}
+header h1 span{color:var(--red)}
+header h1 .rev{color:var(--green)}
+#search-box{flex:1;max-width:480px;position:relative}
+#search{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:6px 10px;font-family:inherit;font-size:13px;border-radius:3px;outline:none}
+#search:focus{border-color:var(--dim)}
+#search::placeholder{color:var(--dim)}
+#results-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-top:none;max-height:50vh;overflow-y:auto;z-index:1000;display:none;border-radius:0 0 3px 3px}
+#results-dropdown .result-item{padding:8px 10px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:start;gap:8px}
+#results-dropdown .result-item:hover{background:#1a1a1a}
+#results-dropdown .result-item:last-child{border-bottom:none}
+.result-name{font-weight:600;color:var(--fg)}
+.result-state{color:var(--dim);font-size:11px}
+.result-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tag{font-size:10px;padding:1px 5px;border-radius:2px;font-weight:500}
+.flag-banner{background:var(--red);color:#fff;padding:3px 8px;font-size:11px;font-weight:700;display:inline-block;margin-right:6px;border-radius:2px}
+.reversal-badge{background:var(--green);color:#fff;padding:3px 8px;font-size:10px;font-weight:700;display:inline-block;border-radius:2px}
+main{display:flex;flex:1;overflow:hidden}
+#map{flex:1;background:#0d0d0d}
+#sidebar{width:340px;border-left:1px solid var(--border);overflow-y:auto;background:var(--surface);flex-shrink:0;display:flex;flex-direction:column}
+#sidebar.hidden{display:none}
+.sidebar-header{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.sidebar-header h2{font-size:13px;font-weight:600}
+.sidebar-close{background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px;padding:2px 6px}
+.sidebar-close:hover{color:var(--fg)}
+#detail-content{padding:12px;font-size:12px;flex:1;overflow-y:auto}
+.detail-section{margin-bottom:14px}
+.detail-section h3{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:6px}
+.detail-tags{display:flex;flex-wrap:wrap;gap:4px}
+.detail-reason{color:var(--fg);line-height:1.6}
+.detail-reason strong{color:var(--red)}
+.detail-reason .rev{color:var(--green)}
+.what-changed{border-left:3px solid #4fc3f7;padding-left:10px;background:rgba(79,195,247,.04);border-radius:0 4px 4px 0;margin-bottom:16px!important}
+.civic-action{border:1px solid #4fc3f733;background:rgba(79,195,247,.03);padding:12px;border-radius:4px;margin-top:12px}
+.civic-distance{font-size:11px;color:#4fc3f7;margin-bottom:8px}
+.civic-prompt{font-size:11px;color:var(--dim);margin-bottom:10px;line-height:1.5}
+.civic-letter{font-size:11px;color:var(--fg);background:var(--bg);border:1px solid var(--border);padding:10px;border-radius:3px;max-height:200px;overflow-y:auto;line-height:1.6;margin-bottom:10px;white-space:pre-wrap}
+.civic-lookup{margin-bottom:10px}
+.civic-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px}
+.civic-input-row{display:flex;gap:6px}
+.civic-input{background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 8px;font-family:inherit;font-size:11px;border-radius:2px;outline:none;width:80px}
+.civic-input:focus{border-color:#4fc3f7}
+.civic-btn{background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 10px;font-family:inherit;font-size:11px;border-radius:2px;cursor:pointer;white-space:nowrap}
+.civic-btn:hover{border-color:#4fc3f7;color:var(--fg)}
+.civic-btn-primary{border-color:#4fc3f7;color:#4fc3f7}
+.civic-btn-primary:hover{background:#4fc3f722}
+.civic-reps{margin-top:8px}
+.civic-rep{background:var(--bg);border:1px solid var(--border);padding:8px;border-radius:3px;margin-bottom:6px;font-size:11px}
+.civic-rep strong{color:var(--fg)}
+.civic-party{color:var(--dim);font-size:10px}
+.civic-title{color:var(--dim);font-size:10px;margin-top:2px}
+.civic-contact{color:var(--dim);font-size:10px;margin-top:2px}
+.civic-contact a{color:var(--blue)}
+.civic-note{font-size:10px;color:var(--dim);margin-top:6px;font-style:italic}
+.civic-loading{font-size:11px;color:var(--dim);font-style:italic}
+.civic-actions{display:flex;gap:6px;margin-top:8px}
+.detail-stat{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)}
+.detail-stat .label{color:var(--dim)}
+.detail-stat .value{color:var(--fg);font-weight:600}
+#stats-bar{padding:6px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--dim);display:flex;gap:20px;flex-shrink:0}
+#stats-bar span{color:var(--fg)}
+.leaflet-popup-content-wrapper{background:var(--surface)!important;color:var(--fg)!important;border:1px solid var(--border)!important;border-radius:3px!important;font-family:inherit!important;font-size:12px!important}
+.leaflet-popup-tip{background:var(--surface)!important;border:1px solid var(--border)!important}
+.leaflet-popup-content{margin:8px 10px!important}
+.popup-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.popup-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px}
+.popup-reason{font-size:11px;color:var(--dim);line-height:1.4}
+.popup-link{color:var(--blue);cursor:pointer;font-size:11px;margin-top:6px;display:inline-block}
+.popup-link:hover{text-decoration:underline}
+#filter-bar{padding:6px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+#main-categories{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-bottom:0}
+#sub-categories{display:none;gap:4px;flex-wrap:wrap;align-items:center;margin-top:5px;padding-top:5px;border-top:1px solid var(--border)}
+#sub-categories.visible{display:flex}
+.filter-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-right:4px}
+.cat-pill{font-size:11px;padding:4px 10px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--dim);transition:all .15s;user-select:none;font-family:inherit;font-weight:500}
+.cat-pill:hover{border-color:#555;color:var(--fg)}
+.cat-pill.active{color:#fff;font-weight:700}
+.cat-pill.active.all-pill{border-color:var(--fg);color:var(--fg);background:transparent}
+.sub-pill{font-size:10px;padding:3px 8px;border-radius:2px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--dim);transition:all .15s;user-select:none;font-family:inherit}
+.sub-pill:hover{border-color:#555;color:var(--fg)}
+.sub-pill.active{border-color:var(--fg);color:var(--fg);font-weight:600}
+.sub-pill.active.all-sub{border-color:var(--dim);color:var(--fg)}
+#right-now{font-size:12px;color:var(--dim);white-space:nowrap;flex-shrink:0}
+.right-now-highlight{color:var(--fg);font-weight:600;border-bottom:1px solid var(--dim)}
+@media(max-width:768px){
+#sidebar{position:fixed;right:0;top:0;bottom:0;width:90vw;max-width:340px;z-index:2000;box-shadow:-4px 0 20px rgba(0,0,0,.5)}
+header{flex-wrap:wrap;gap:8px;padding:8px 12px}
+header h1{font-size:13px}
+#search-box{max-width:100%;order:3;flex-basis:100%}
+#filter-bar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+#main-categories{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+#sub-categories{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+.cat-pill{white-space:nowrap;flex-shrink:0}
+.sub-pill{white-space:nowrap;flex-shrink:0}
+#detail-content{font-size:11px;padding:10px}
+.detail-stat{flex-direction:column;gap:1px}
+.detail-stat .label{font-size:10px}
+.detail-stat .value{font-size:11px}
+}
+.leaflet-control-layers{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:3px!important;font-family:inherit!important;font-size:11px!important;color:var(--fg)!important}
+.leaflet-control-layers-toggle{background:var(--surface)!important;border:1px solid var(--border)!important;width:30px!important;height:30px!important;background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23c8c8c8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>')!important;background-size:18px 18px!important;background-position:center!important;background-repeat:no-repeat!important}
+.leaflet-control-layers label{color:var(--fg)!important}
+.leaflet-control-layers-separator{background:var(--border)!important}
+</style>
+</head>
+<body>
+<header>
+<h1><span><a href="index.html" title="mappd">mappd</a></span> — how you livin'? <span class="rev">right now in USA</span> warts & all</h1>
+<div id="right-now">and it's only <span id="right-now-time" class="right-now-highlight" title="The best time to plant a tree is 20 years ago. The second best time is right now.">right now</span></div>
+<div id="search-box">
+<input type="text" id="search" placeholder="search a city, county, or state... (e.g. Flint, Jackson, Cancer Alley)" autocomplete="off"/>
+<div id="results-dropdown"></div>
+</div>
+<nav style="margin-left:auto;display:flex;gap:12px;flex-shrink:0">
+<a href="data.html" style="color:var(--blue);text-decoration:none;font-size:12px">data table &rarr;</a>
+<a href="literacy.html" style="color:var(--blue);text-decoration:none;font-size:12px">literacy &rarr;</a>
+</nav>
+</header>
+<div id="filter-bar">
+<div id="main-categories">
+<span class="filter-label">filter</span>
+<button class="cat-pill active all-pill" data-cat="all" onclick="selectCategory('all')">ALL</button>
+</div>
+<div id="sub-categories"></div>
+</div>
+<main>
+<div id="map"></div>
+<div id="sidebar" class="hidden">
+<div class="sidebar-header">
+<h2 id="detail-title">—</h2>
+<button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+</div>
+<div id="detail-content"></div>
+</div>
+</main>
+<div id="stats-bar">
+<div>flagged places: <span id="stat-total">0</span></div>
+<div>reversals: <span id="stat-rev">0</span></div>
+<div>states: <span id="stat-states">0</span></div>
+</div>
+
+<script src="places-data.js"></script>
+<script src="app.js"></script>
+<script>
+(function(){
+  const el=document.getElementById('right-now-time');
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const now=new Date();
+  el.textContent=days[now.getDay()];
+})();
+</script>
+</body>
+</html>
