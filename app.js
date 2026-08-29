@@ -21,7 +21,7 @@ function makeMarker(p,i){
   const isReversal=p.tags&&p.tags.includes('reversal');
   const isImproving=p.tags&&p.tags.includes('improving');
   const isPositive=isFuture||isReversal||isImproving;
-  let color=isFuture?'#1565c0':isReversal||isImproving?'#2e7d32':SEV[p.severity]||'#666';
+  let color=isFuture?'#0288d1':isReversal||isImproving?'#2e7d32':SEV[p.severity]||'#666';
 
   const isPositiveMarker=hasReversal||isPositive;
   let fill='solid';
@@ -37,7 +37,7 @@ function makeMarker(p,i){
       width:${isPositiveMarker?14:12}px;height:${isPositiveMarker?14:12}px;border-radius:50%;
       background:${bg};
       border:${bd};
-      box-shadow:0 0 ${isPositiveMarker?10:6}px ${isPositiveMarker?(isFuture?'#1565c066':'#2e7d3166'):color+'66'};
+      box-shadow:0 0 ${isPositiveMarker?10:6}px ${isPositiveMarker?(isFuture?'#0288d166':'#2e7d3166'):color+'66'};
       cursor:pointer;
     "></div>`,
     iconSize:[isPositiveMarker?14:12,isPositiveMarker?14:12],
