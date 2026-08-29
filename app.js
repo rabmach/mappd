@@ -9,13 +9,9 @@ const places=PLACES.filter(p=>{
 const map=L.map('map',{center:[37.5,-96],zoom:5,minZoom:3,maxZoom:16});
 
 const baseLayers={
-  'Dark':L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'CartoDB'}),
-  'Terrain':L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'OpenTopoMap'}),
-  'Satellite':L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Esri'}),
-  'Physical':L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'CartoDB'})
+  'OSM':L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'})
 };
-baseLayers['Dark'].addTo(map);
-L.control.layers(baseLayers,null,{position:'bottomright',collapsed:false}).addTo(map);
+baseLayers['OSM'].addTo(map);
 
 const markers=[];
 
@@ -25,16 +21,23 @@ function makeMarker(p,i){
   const isReversal=p.tags&&p.tags.includes('reversal');
   const isImproving=p.tags&&p.tags.includes('improving');
   const isPositive=isFuture||isReversal||isImproving;
-  let color=isFuture?'#4fc3f7':isReversal||isImproving?'#2ecc71':SEV[p.severity]||'#666';
+  let color=isFuture?'#1565c0':isReversal||isImproving?'#2e7d32':SEV[p.severity]||'#666';
 
   const isPositiveMarker=hasReversal||isPositive;
+  let fill='solid';
+  if(!isPositiveMarker&&p.severity){
+    fill=p.severity==='extreme'?'solid':p.severity==='severe'?'half':'hollow';
+  }
+  const bg=fill==='solid'?color:fill==='half'?
+    `linear-gradient(to bottom,${color} 50%,rgba(0,0,0,0) 50%)`:'rgba(0,0,0,0)';
+  const bd=fill==='hollow'?'2px solid '+color:'2px solid '+color+'88';
   const icon=L.divIcon({
     className:'',
     html:`<div style="
       width:${isPositiveMarker?14:12}px;height:${isPositiveMarker?14:12}px;border-radius:50%;
-      background:${isPositiveMarker?(isFuture?'#4fc3f7':'#2ecc71'):color};
-      border:2px solid ${isPositiveMarker?(isFuture?'#4fc3f788':'#2ecc7188'):color+'88'};
-      box-shadow:0 0 ${isPositiveMarker?10:6}px ${isPositiveMarker?(isFuture?'#4fc3f766':'#2ecc7166'):color+'44'};
+      background:${bg};
+      border:${bd};
+      box-shadow:0 0 ${isPositiveMarker?10:6}px ${isPositiveMarker?(isFuture?'#1565c066':'#2e7d3166'):color+'66'};
       cursor:pointer;
     "></div>`,
     iconSize:[isPositiveMarker?14:12,isPositiveMarker?14:12],

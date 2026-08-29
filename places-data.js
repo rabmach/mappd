@@ -37,7 +37,7 @@ var TAG_COLORS={
   "water-scarce":{bg:"#b03a2e",fg:"#f5b7b1",label:"Water Scarcity"}
 };
 
-var SEV={extreme:"#8b0000",severe:"#c0392b",moderate:"#e74c3c"};
+var SEV={extreme:"#7f1d1d",severe:"#c62828",moderate:"#ef6c00"};
 
 var PLACES=[
 {
