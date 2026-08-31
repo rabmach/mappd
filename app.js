@@ -412,23 +412,6 @@ function buildMailto(p,reps){
   return`mailto:?subject=${subject}&body=${body}`;
 }
 
-function lookupReps(zip){
-  return fetch(`https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyB0d1_VZcXNqgZlLMdNHKV2rJD0mGCPxYQ&address=${encodeURIComponent(zip)}`)
-    .then(r=>r.json())
-    .then(d=>{
-      if(!d.officials)return[];
-      return d.officials.filter(o=>o.phones||o.emails||o.urls).map(o=>({
-        name:o.name||'',
-        party:o.party||'',
-        title:o.office?o.office.name:'',
-        phones:o.phones||[],
-        emails:o.emails||[],
-        urls:o.urls||[]
-      }));
-    })
-    .catch(()=>[]);
-}
-
 function civicActionHtml(p){
   const dist=civicDistance(p);
   const sameState=userLoc&&userLoc.state&&userLoc.state.toLowerCase()===p.state.toLowerCase();
@@ -447,13 +430,8 @@ function civicActionHtml(p){
 
       <div id="civic-letter-preview" class="civic-letter">${buildLetter(p).replace(/\n/g,'<br>')}</div>
 
-      <div id="civic-lookup" class="civic-lookup">
-        <label class="civic-label">Find your representatives (enter zip code):</label>
-        <div class="civic-input-row">
-          <input type="text" id="civic-zip" class="civic-input" placeholder="zip code" maxlength="5" inputmode="numeric"/>
-          <button class="civic-btn" onclick="lookupAndShow('${p.name}','${p.state}')">Find reps</button>
-        </div>
-        <div id="civic-reps"></div>
+      <div class="civic-lookup">
+        <a class="civic-btn" href="https://www.usa.gov/elected-officials" target="_blank" rel="noopener noreferrer">Find your representatives &#8599;</a>
       </div>
 
       <div class="civic-actions">
@@ -463,29 +441,6 @@ function civicActionHtml(p){
       <p class="civic-note">Your location is approximate (city-level from IP). No data is stored.</p>
     </div>
   </div>`;
-}
-
-function lookupAndShow(name,state){
-  const zip=document.getElementById('civic-zip').value.trim();
-  if(!/^\d{5}$/.test(zip))return;
-  const repsDiv=document.getElementById('civic-reps');
-  repsDiv.innerHTML='<p class="civic-loading">Looking up representatives...</p>';
-  lookupReps(zip).then(reps=>{
-    if(!reps.length){
-      repsDiv.innerHTML='<p class="civic-note">No representatives found for that zip code.</p>';
-      return;
-    }
-    window._civicReps=reps;
-    repsDiv.innerHTML=reps.map(r=>`
-      <div class="civic-rep">
-        <strong>${r.name}</strong> <span class="civic-party">${r.party}</span>
-        ${r.title?`<div class="civic-title">${r.title}</div>`:''}
-        ${r.phones.length?`<div class="civic-contact">Phone: ${r.phones[0]}</div>`:''}
-        ${r.emails.length?`<div class="civic-contact">Email: ${r.emails[0]}</div>`:''}
-        ${r.urls.length?`<div class="civic-contact"><a href="${r.urls[0]}" target="_blank" style="color:var(--blue)">Contact form</a></div>`:''}
-      </div>
-    `).join('');
-  });
 }
 
 function copyLetter(name,state){
@@ -501,7 +456,7 @@ function copyLetter(name,state){
 function sendMailto(name,state){
   const p=places.find(x=>x.name===name&&x.state===state);
   if(!p)return;
-  const reps=window._civicReps||[];
+  const reps=[];
   window.location.href=buildMailto(p,reps);
 }
 
