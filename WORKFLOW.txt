@@ -2,7 +2,7 @@ mappd — keeping it current
 ==========================
 
 the site is flat HTML/JS/CSS. no build step, no framework, no dependencies to rot.
-every update is one commit. push to main, sync to gh-pages, live in 30 seconds.
+every update is one commit. push to main, live in 30 seconds.
 
 
 ADDING A NEW ENTRY
@@ -11,8 +11,7 @@ ADDING A NEW ENTRY
 2. fill it in
 3. paste into places-data.js inside the PLACES array
 4. git add . && git commit -m "add [place name]" && git push
-5. sync to gh-pages (see below)
-6. done. live in 30 seconds.
+5. done. live in 30 seconds.
 
 
 CHECKING IF DATA IS STILL ACCURATE
@@ -38,16 +37,6 @@ find something broken → research it → add the entry → push → live
 run check-sources.sh monthly → stale links → update → push → live
 new PIAAC data → update literacy.html + state.html → push → live
 someone on Reddit says "what about X?" → add it → push → live
-
-
-DEPLOYING (after every push to main)
---------------------------------------
-git checkout gh-pages && git read-tree --reset -u main && git commit -m "sync" && git push origin gh-pages && git checkout main
-
-or the short version:
-git co gh-pages && git read-tree --reset -u main && git ci -m "sync" && git push o gh-pages && git co main
-
-do this after every push to main. gh-pages is what GitHub Pages serves.
 
 
 PUSHING TO GITHUB (first time)
