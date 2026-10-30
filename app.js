@@ -21,7 +21,7 @@ function makeMarker(p,i){
   const isReversal=p.tags&&p.tags.includes('reversal');
   const isImproving=p.tags&&p.tags.includes('improving');
   const isPositive=isFuture||isReversal||isImproving;
-  let color=isFuture?'#0288d1':isReversal||isImproving?'#2e7d32':SEV[p.severity]||'#666';
+  let color=isFuture?'#0288d1':isReversal||isImproving?'#e91e63':SEV[p.severity]||'#666';
 
   const isPositiveMarker=hasReversal||isPositive;
   let fill='solid';
