@@ -5,7 +5,7 @@ set -euo pipefail
 # section of NCES's data-files page that lists state/county estimates; when
 # that fingerprint CHANGES, it raises the marker. No phrase-guessing, so it
 # cannot fire early — any edit to that section (likely the release) rings it.
-LOGDIR="${HOME}/mappd/logs"
+LOGDIR="${HOME}/.local/state"
 HASHFILE="$LOGDIR/piaac-hash"
 mkdir -p "$LOGDIR"
 url="https://nces.ed.gov/surveys/piaac/datafiles.asp"
